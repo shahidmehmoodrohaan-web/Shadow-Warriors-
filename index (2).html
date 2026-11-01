@@ -1,0 +1,303 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Shadow Warriors - Free Anime Fighting Game (Play in Browser)</title>
+<meta name="description" content="Shadow Warriors is a free anime-style fighting game you can play in your browser on PC or Android. Fight the CPU on 4 difficulty levels, unlock fighters and special powers with coins, and climb the leaderboard.">
+<meta name="keywords" content="Shadow Warriors, anime fighting game, browser fighting game, free online fighting game, mobile fighting game, 2D fighter, play online">
+<meta name="robots" content="index, follow">
+<meta name="theme-color" content="#0b0a1a">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Shadow Warriors - Free Anime Fighting Game">
+<meta property="og:description" content="Play free in your browser on PC or Android. 5 fighters, 5 arenas, special powers, a character store and a leaderboard.">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Shadow Warriors - Free Anime Fighting Game">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"VideoGame","name":"Shadow Warriors","description":"A free anime-style fighting game playable in the browser on PC and Android.","genre":"Fighting","applicationCategory":"Game","operatingSystem":"Any (web browser)","playMode":"SinglePlayer","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}</script>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:dark;--bg:#0b0a1a;--fg:#f4f1ff;--ac:#ff4f6d;--b:#4fd1ff;--cd:#1b1838}
+*{box-sizing:border-box}html,body{height:100%;margin:0;background:var(--bg);color:var(--fg);font:16px system-ui,sans-serif;overflow:hidden;user-select:none;-webkit-user-select:none;touch-action:none}
+#c{position:fixed;inset:0;width:100%;height:100%}
+.s{position:fixed;inset:0;display:none;flex-direction:column;align-items:center;justify-content:safe center;gap:10px;padding:16px;background:radial-gradient(circle at 50% 20%,#2a1650,#0b0a1a 70%);overflow:auto;touch-action:pan-y;overscroll-behavior:contain;text-align:center}
+.s.on{display:flex}
+h1{font-size:clamp(28px,7vw,60px);margin:0;letter-spacing:3px;background:linear-gradient(90deg,var(--ac),var(--b));-webkit-background-clip:text;background-clip:text;color:transparent}
+h2{margin:0}
+button{font:inherit;color:var(--fg);background:var(--cd);border:2px solid var(--b);border-radius:12px;padding:10px 18px;min-width:200px;cursor:pointer;touch-action:manipulation}
+button:hover,button.sel{background:var(--ac);border-color:#fff}
+button:disabled{opacity:.45;cursor:default;background:var(--cd)}
+.row{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.card{background:var(--cd);border:2px solid #3a3570;border-radius:14px;padding:8px;width:156px;font-size:13px;cursor:pointer}
+.card.sel{border-color:var(--ac)}.card canvas{width:100%;height:110px;display:block}
+.card small{opacity:.8;display:block;margin:4px 0}
+.box{background:var(--cd);border-radius:12px;padding:10px 16px;text-align:left;min-width:260px}
+input{font:inherit;padding:8px;border-radius:8px;border:2px solid var(--b);background:#0b0a1a;color:var(--fg);width:200px}
+#tc{position:fixed;inset:0;display:none;pointer-events:none;z-index:5}
+#joy{position:absolute;left:18px;bottom:18px;width:130px;height:130px;border-radius:50%;background:#ffffff22;border:2px solid #fff6;pointer-events:auto}
+#kn{position:absolute;left:50%;top:50%;width:50px;height:50px;margin:-25px;border-radius:50%;background:#ffffffaa}
+#bt{position:absolute;right:14px;bottom:14px;width:210px;display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-end;pointer-events:auto}
+#bt button{min-width:0;width:62px;height:62px;border-radius:50%;padding:0;font-size:12px;background:#1b1838cc}
+#q{position:fixed;right:10px;top:calc(env(safe-area-inset-top,0px) + 8px);display:none;z-index:6;min-width:0;padding:6px 12px}
+#pw{position:fixed;right:12px;bottom:calc(env(safe-area-inset-bottom,0px) + 12px);display:none;gap:8px;z-index:6;flex-direction:row-reverse}
+body.touch #pw{bottom:calc(env(safe-area-inset-bottom,0px) + 232px)}
+.pb{min-width:0;width:54px;height:54px;padding:0;border-radius:12px;font-size:24px;position:relative;overflow:hidden;background:#1b1838dd}
+.pb small{position:absolute;left:4px;top:2px;font-size:11px;opacity:.85}
+.pb u{position:absolute;left:0;bottom:0;width:100%;height:0;background:#000b}
+.pb.cd{opacity:.65}
+#ar{position:absolute;left:14px;bottom:18px;display:none;gap:8px;pointer-events:auto}
+#ar button{min-width:0;width:58px;height:58px;border-radius:14px;padding:0;font-size:22px;background:#1b1838cc}
+.lr{display:flex;gap:10px;align-items:center;padding:6px 8px;border-bottom:1px solid #fff2;font-size:17px}.lr .nm{flex:1;text-align:left}.lr.me{background:#ff4f6d44;border-radius:8px}
+#toast{position:fixed;left:50%;top:70px;transform:translateX(-50%);background:#000c;padding:10px 18px;border-radius:20px;opacity:0;transition:opacity .3s;z-index:9;pointer-events:none}
+#rot{display:none;position:fixed;inset:0;z-index:8;background:#0b0a1af2;align-items:center;justify-content:center;font-size:20px;text-align:center;padding:30px}
+@media (orientation:portrait){body.bt.touch #rot{display:flex}}
+</style></head><body>
+<canvas id="c"></canvas>
+<noscript><div style="position:fixed;inset:0;z-index:20;background:#0b0a1a;padding:30px;text-align:center"><h1>Shadow Warriors</h1><p>A free anime-style fighting game for PC and Android. Fight the CPU on Easy, Normal, Hard or Expert, unlock fighters and special powers in the store, and climb the leaderboard. Please turn on JavaScript to play.</p></div></noscript>
+<div id="au" class="s"><h1>SHADOW WARRIORS</h1><p id="aum">Log in to keep your progress on every device</p><input id="ae" type="email" placeholder="Email"><input id="ap" type="password" placeholder="Password (6+ characters)"><input id="an" maxlength="14" placeholder="Username (sign up only)"><div class="row"><button onclick="auth(0)">Log in</button><button onclick="auth(1)">Sign up</button></div><button onclick="show('lb')">🏆 View leaderboard (no login needed)</button></div>
+<div id="pv" class="s"><h2>🌐 Online Player vs Player</h2><b id="pvo"></b><p id="pvs" style="max-width:420px"></p><div class="row"><button onclick="pq()">⚔ Quick match</button><button onclick="pc()">Create private room</button></div><div class="row"><input id="pvc" maxlength="4" placeholder="ROOM CODE" style="width:120px;text-transform:uppercase"><button onclick="pj()" style="min-width:0">Join room</button></div><div class="row"><button onclick="pl()">Cancel search / leave room</button><button onclick="pl();show('menu')">Back</button></div></div>
+<div id="menu" class="s on"><h1>SHADOW WARRIORS</h1><p>Ultimate Battle · 2.5D anime fighter</p>
+<button onclick="md=0;show('sel')">Fight vs CPU</button><button onclick="show('pv')">🌐 Player vs Player (Online)</button><button onclick="md=1;show('sel')">Training Mode</button><button onclick="show('st')">Character Store</button><button onclick="show('pf')">Profile</button><button onclick="show('lb')">🏆 Leaderboard</button><button onclick="show('se')">Settings</button>
+<small>PC (rebind keys in Settings): WASD / arrow keys move · Space jump · J punch · K kick · L special · I ultimate · Shift dodge · U block</small></div>
+<div id="sel" class="s"><h2 id="sttl"></h2><b>Choose fighter</b><div id="cg" class="row"></div><div id="dgw"><b>CPU difficulty</b><div id="dg" class="row"></div><small id="dd"></small></div><b>Arena</b><div id="ag" class="row"></div><div class="row"><button onclick="start(md)">⚔ Start</button><button onclick="show('menu')">Back</button></div></div>
+<div id="st" class="s"><h2>Character Store</h2><b id="co"></b><div id="sg" class="row"></div><b>⚡ Special Powers</b><small>In battle: tap the icons at the bottom-right, or press keys 1-5.</small><div id="pg" class="row"></div><button onclick="show('menu')">Back</button></div>
+<div id="pf" class="s"><h2>Profile</h2><div class="box"><div>Name: <input id="nm" maxlength="14" oninput="S.name=this.value.trim()||'Warrior';save()" onchange="cloudPrefs()"></div><div>Avatar:</div><div id="avr" class="row"></div><p id="ps"></p><b>Missions</b><div id="ms"></div><b>Recent matches</b><div id="hs"></div></div><button onclick="show('menu')">Back</button></div>
+<div id="se" class="s"><h2>Settings</h2><button id="b1" onclick="S.mus^=1;save();rset()"></button><button id="b2" onclick="S.snd^=1;save();rset()"></button><button id="b3" onclick="S.shk^=1;save();rset()"></button><button id="b4" onclick="S.lh^=1;save();rset()"></button><button id="b5" onclick="S.tsz=S.tsz%3+1;save();rset()"></button><button id="b6" onclick="S.ctl^=1;save();rset()"></button><button id="lo" onclick="logout()">Log out</button><button onclick="show('lb')">🏆 Leaderboard</button><div class="box"><div>Music volume <input type="range" id="mv" min="0" max="10" oninput="S.mv=+this.value;save()"></div><div>Effects volume <input type="range" id="sv" min="0" max="10" oninput="S.sv=+this.value;save()"></div></div><b>Keyboard controls (click one, then press a new key)</b><div id="kb" class="row"></div><button onclick="if(confirm('Erase all progress?')){localStorage.removeItem(CLOUD?'sw_cfg':'sw');location.reload()}">Reset progress</button><button onclick="show('menu')">Back</button></div>
+<div id="lb" class="s"><h2>🏆 Leaderboard</h2><div class="row"><button id="t0" onclick="lbT=0;rlb()">⚔ Most kills</button><button id="t1" onclick="lbT=1;rlb()">🪙 Most coins</button></div><div id="lbl" class="box" style="width:min(440px,92vw)"></div><small id="lbn" style="max-width:440px"></small><div class="row"><button onclick="rlb()">Refresh</button><button onclick="show(UID||!CLOUD?'menu':'au')">Back</button></div></div>
+<div id="res" class="s" style="background:#000a"><h1 id="rt"></h1><h2 id="rd"></h2><div class="row"><button id="rb1" onclick="start(G.tr)">Rematch</button><button id="rb2" onclick="md=G.tr?1:0;show('sel')">Change difficulty / map</button><button onclick="quit()">Menu</button></div></div>
+<button id="q" onclick="quit()">☰ Menu</button>
+<div id="tc"><div id="joy"><div id="kn"></div></div><div id="ar"><button data-k="left">◀</button><button data-k="up">▲</button><button data-k="right">▶</button></div><div id="bt"><button data-k="punch">Punch</button><button data-k="kick">Kick</button><button data-k="sp">Special</button><button data-k="ult">Ultimate</button><button data-k="up">Jump</button><button data-k="block">Block</button><button data-k="dodge">Dodge</button></div></div>
+<div id="pw"></div><div id="rot">Rotate your phone to landscape to fight</div><div id="toast"></div>
+<script>
+const $=s=>document.querySelector(s),cv=$('#c');let X=cv.getContext('2d'),W,H,T=0,GY=440,G=null,md=0,AC,mn=0;
+function rs(){W=cv.width=innerWidth;H=cv.height=innerHeight}addEventListener('resize',rs);rs();
+const touch=matchMedia('(pointer:coarse)').matches;if(touch)document.body.classList.add('touch');
+const today=new Date().toISOString().slice(0,10);
+const SB_URL='',SB_KEY='',CLOUD=!!(SB_URL&&SB_KEY);let sb=null,UID=null;
+let S={name:'Warrior',coins:100,own:['kaito','mika'],w:0,l:0,hist:[],last:'',m:{win:0,hit:0,ult:0,done:[]},snd:1,mus:1,mv:5,sv:8,shk:1,tsz:2,lh:0,keys:{},pw:[],ctl:0,kills:0,av:0,diff:1,ch:'kaito',ar:0};
+try{Object.assign(S,JSON.parse(localStorage[CLOUD?'sw_cfg':'sw']||'{}'))}catch(e){}
+const save=()=>{try{if(CLOUD){const{snd,mus,mv,sv,shk,tsz,lh,keys,ctl,diff,ar}=S;localStorage.sw_cfg=JSON.stringify({snd,mus,mv,sv,shk,tsz,lh,keys,ctl,diff,ar})}else localStorage.sw=JSON.stringify(S)}catch(e){}};
+const toast=m=>{const t=$('#toast');t.textContent=m;t.style.opacity=1;clearTimeout(toast.i);toast.i=setTimeout(()=>t.style.opacity=0,2800)};
+if(!CLOUD&&S.last!==today){S.last=today;S.coins+=100;save();setTimeout(()=>toast('Daily login reward: +100 coins'),600)}
+const C=[
+{id:'kaito',n:'Kaito',t:'Flame Brawler',c:'#ff6a3d',h:'#ffd23f',hp:100,sp:5,dm:1.1,jp:1,pr:0,d:'Balanced fire fighter. Special: Fire Wave. Ultimate: Inferno Burst. Transform: Blaze Form.'},
+{id:'mika',n:'Mika',t:'Wind Ninja',c:'#3dd9ff',h:'#ffffff',hp:90,sp:6.5,dm:.95,jp:1.2,pr:0,d:'Fast and agile, lower power. Special: Gale Shot. Ultimate: Typhoon Beam. Transform: Storm Form.'},
+{id:'gorou',n:'Gorou',t:'Stone Titan',c:'#a07850',h:'#444',hp:140,sp:3.8,dm:1.35,jp:.85,pr:200,d:'Slow tank with huge damage. Special: Rock Blast. Ultimate: Quake Cannon. Transform: Titan Form.'},
+{id:'sora',n:'Sora',t:'Lightning Monk',c:'#c77dff',h:'#f4e6ff',hp:100,sp:5.5,dm:1.05,jp:1.1,pr:250,d:'All-rounder with quick strikes. Special: Bolt Orb. Ultimate: Thunder God. Transform: Volt Form.'},
+{id:'zen',n:'Zen',t:'Shadow Assassin',c:'#3a3a6a',h:'#44ff9a',hp:85,sp:6,dm:1.25,jp:1.15,pr:300,d:'Glass cannon, hits hard. Special: Shadow Slash. Ultimate: Void Eclipse. Transform: Phantom Form.'}];
+const AR=[{n:'Mountain Arena',s:['#6ec6ff','#ffd9a8'],g:'#6b5b4a',i:0},{n:'Futuristic City',s:['#12062e','#ff2d95'],g:'#1b1b3a',i:1},{n:'Ancient Temple',s:['#f6b26b','#6a3d2b'],g:'#8a6a4a',i:2},{n:'Forest Arena',s:['#9be7a1','#1d5a3a'],g:'#2d4a2d',i:3},{n:'Desert Battlefield',s:['#ffcf70','#ff8a50'],g:'#d9a85c',i:4}];
+const DF=['Easy','Normal','Hard','Expert'],P=[{th:.55,at:.3,bl:.1,sp:.15,dg:0},{th:.35,at:.5,bl:.3,sp:.3,dg:0},{th:.2,at:.7,bl:.5,sp:.5,dg:.2},{th:.09,at:.92,bl:.8,sp:.7,dg:.5}];
+const M=[{id:'w',t:'Win 3 matches',k:'win',g:3,r:100},{id:'h',t:'Land 40 hits',k:'hit',g:40,r:80},{id:'u',t:'Use an ultimate',k:'ult',g:1,r:60}];
+function chk(){if(CLOUD)return;M.forEach(m=>{if(S.m[m.k]>=m.g&&!S.m.done.includes(m.id)){S.m.done.push(m.id);S.coins+=m.r;toast(`Mission complete: ${m.t} +${m.r} coins`)}})}
+function beep(f,d=.1,ty='square',v=.07,m){if(!S.snd&&!m)return;v*=m?1:S.sv/8;if(!v)return;try{AC=AC||new AudioContext();const o=AC.createOscillator(),g=AC.createGain();o.type=ty;o.frequency.value=f;g.gain.setValueAtTime(v,AC.currentTime);g.gain.exponentialRampToValueAtTime(.001,AC.currentTime+d);o.connect(g);g.connect(AC.destination);o.start();o.stop(AC.currentTime+d)}catch(e){}}
+setInterval(()=>{if(G&&!G.over&&S.mus&&S.mv)beep([196,247,294,247,220,277,330,277][mn++%8],.25,'triangle',.007*S.mv,1)},230);
+const K={},DK={left:'KeyA',right:'KeyD',up:'Space',punch:'KeyJ',kick:'KeyK',sp:'KeyL',ult:'KeyI',dodge:'ShiftLeft',block:'KeyU'};let km={},RB=null;
+function bk(){km={};for(const a in DK)km[S.keys[a]||DK[a]]=a;if(!km.KeyW)km.KeyW='up';if(!km.ShiftRight)km.ShiftRight='dodge';[['ArrowLeft','left'],['ArrowRight','right'],['ArrowUp','up'],['ArrowDown','block']].forEach(([c,a])=>{if(!km[c])km[c]=a})}bk();
+function setKey(c){const old=S.keys[RB]||DK[RB];for(const a in DK)if(a!==RB&&(S.keys[a]||DK[a])===c)S.keys[a]=old;S.keys[RB]=c;RB=null;save();bk();rset()}
+addEventListener('keydown',e=>{if(RB){if(e.code==='Escape'){RB=null;rset()}else setKey(e.code);e.preventDefault();return}if(G&&/^Digit[1-5]$/.test(e.code)){const o=PW.filter(p=>S.pw.includes(p.id))[+e.code[5]-1];if(o)usePw(o.id)}if(km[e.code]){K[km[e.code]]=1;if(G)e.preventDefault()}if(e.code==='Escape'&&G)quit()});
+addEventListener('keyup',e=>{if(km[e.code])K[km[e.code]]=0});
+document.querySelectorAll('[data-k]').forEach(b=>{b.onpointerdown=e=>{K[b.dataset.k]=1;e.preventDefault()};b.onpointerup=b.onpointerleave=b.onpointercancel=()=>K[b.dataset.k]=0});
+const jy=$('#joy'),kn=$('#kn');let jid=null;
+function jm(e){const r=jy.getBoundingClientRect(),dx=e.clientX-r.left-r.width/2,dy=e.clientY-r.top-r.height/2,m=Math.min(40,Math.hypot(dx,dy)),a=Math.atan2(dy,dx);kn.style.transform=`translate(${Math.cos(a)*m}px,${Math.sin(a)*m}px)`;K.left=dx<-18?1:0;K.right=dx>18?1:0;K.up=dy<-34?1:0}
+jy.onpointerdown=e=>{jid=e.pointerId;jy.setPointerCapture(jid);jm(e)};jy.onpointermove=e=>{if(e.pointerId===jid)jm(e)};
+jy.onpointerup=jy.onpointercancel=()=>{jid=null;K.left=K.right=K.up=0;kn.style.transform=''};
+const PW=[{id:'heal',n:'Heal',i:'✚',pr:100,cd:25,d:'Restore 30% of your health.'},{id:'shld',n:'Shield',i:'🛡',pr:150,cd:30,d:'Invulnerable for 3 seconds.'},{id:'spd',n:'Haste',i:'⚡',pr:100,cd:25,d:'Move 60% faster for 6 seconds.'},{id:'met',n:'Meteor',i:'☄',pr:200,cd:30,d:'Call a meteor down on your opponent (24 damage).'},{id:'frz',n:'Freeze',i:'❄',pr:250,cd:35,d:'Freeze your opponent for 2 seconds (a hit breaks it).'}];
+function usePw(id){if(!G||G.on||G.over||G.pc[id]>0||!S.pw.includes(id))return;const p=PW.find(x=>x.id===id),a=G.a,b=G.b;
+ if(id==='heal')a.hp=Math.min(a.mhp,a.hp+a.mhp*.3);if(id==='shld')a.inv=3;if(id==='spd')a.spd=6;
+ if(id==='met'){G.fx.push({x:b.x,y:b.y+90,t:.4,c:'#ff8a30'});dm(b,a,24,12)}
+ if(id==='frz'){b.st='hurt';b.t=2;b.vx=0;G.fx.push({x:b.x,y:b.y+90,t:.4,c:'#9be7ff'})}
+ G.pc[id]=p.cd;G.fl=.25;beep(620,.3,'sine',.1)}
+function rpw(){const e=$('#pw');e.innerHTML='';const o=PW.filter(p=>S.pw.includes(p.id));o.forEach((p,i)=>{const b=document.createElement('button');b.className='pb';b.id='pb'+p.id;b.title=p.n;b.innerHTML=`${p.i}<small>${i+1}</small><u></u>`;b.onpointerdown=ev=>{ev.preventDefault();usePw(p.id)};e.append(b)});e.style.display=o.length?'flex':'none'}
+function rpg(){const e=$('#pg');e.innerHTML='';PW.forEach(p=>{const o=S.pw.includes(p.id),d=document.createElement('div');d.className='card';d.style.cursor='default';d.innerHTML=`<div style="font-size:38px;height:60px">${p.i}</div><b>${p.n}</b><small>${p.d}<br>Cooldown ${p.cd}s</small>`;const b=document.createElement('button');b.style.minWidth='0';b.textContent=o?'Owned ✓':'🔒 Buy 🪙'+p.pr;b.disabled=o;if(!o&&S.coins<p.pr)b.textContent='🔒 Need 🪙'+(p.pr-S.coins);b.onclick=()=>{if(S.pw.includes(p.id))return;if(S.coins<p.pr){toast('Not enough coins - win matches to earn more');return}buy('buy_power',{pid:p.id},()=>{S.coins-=p.pr;S.pw.push(p.id)},p.n+' unlocked!')};d.append(b);e.append(d)})}
+function mk(ch,x,f,ai){return{ch,x,y:0,vx:0,vy:0,f,hp:ch.hp,mhp:ch.hp,en:0,st:'idle',t:0,cd:0,inv:0,spd:0,pw:0,cb:0,cbt:0,bt:0,hd:0,k:{}}}
+function show(id){document.querySelectorAll('.s').forEach(s=>s.classList.toggle('on',s.id===id));document.body.classList.toggle('bt',!id);
+ if(id){$('#tc').style.display='none';$('#q').style.display='none';$('#pw').style.display='none';for(const k in K)K[k]=0}
+ if(id==='pv')pvOpen();if(id==='lb')rlb();if(id==='sel')rsel();if(id==='st')rstore();if(id==='pf')rprof();if(id==='se')rset()}
+function quit(){if(G&&G.on)sendW({t:'leave'});G=null;show('menu')}
+function rb(sel,l,v,fn){const e=$(sel);e.innerHTML='';l.forEach((t,i)=>{const b=document.createElement('button');b.textContent=t;b.style.minWidth='0';b.className=i===v?'sel':'';b.onclick=()=>{fn(i);save();rsel()};e.append(b)})}
+function rsel(){if(!S.own.includes(S.ch))S.ch='kaito';const g=$('#cg');g.innerHTML='';
+ C.filter(c=>S.own.includes(c.id)).forEach(c=>{const d=document.createElement('div');d.className='card'+(S.ch===c.id?' sel':'');d.innerHTML=`<canvas width=150 height=110></canvas><b>${c.n}</b><small>${c.t}<br>HP ${c.hp} · Speed ${c.sp} · Power ${c.dm}</small>`;d.onclick=()=>{S.ch=c.id;save();rsel();cloudPrefs()};g.append(d);portrait(c,d.firstChild)});
+ rb('#dg',DF,S.diff,i=>S.diff=i);rb('#ag',AR.map(a=>a.n),S.ar,i=>S.ar=i);$('#dgw').style.display=md?'none':'';$('#dd').textContent=['Slow reactions, rarely blocks.','Balanced: decent reactions and blocking.','Fast and aggressive, blocks often, dodges sometimes.','Lightning reactions, blocks and dodges often.'][S.diff];[...$('#ag').children].forEach((b,i)=>{b.style.background=`linear-gradient(135deg,${AR[i].s[0]},${AR[i].s[1]})`;b.style.textShadow='0 1px 3px #000';b.style.border=i===S.ar?'3px solid #fff':'2px solid #0006'});$('#sttl').textContent=md?'Training Mode':'Fight vs CPU'}
+function rstore(){const sy=$('#st').scrollTop;$('#co').textContent='🪙 '+S.coins+' coins';const el=$('#sg');el.innerHTML='';
+ C.forEach(c=>{const o=S.own.includes(c.id),d=document.createElement('div');d.className='card';d.style.cursor='default';d.innerHTML=`<canvas width=150 height=110></canvas><b>${c.n}</b> · ${c.t}<small>${c.d}</small>`;
+ const b=document.createElement('button');b.style.minWidth='0';b.textContent=o?'Owned ✓':'🔒 Buy 🪙'+c.pr;b.disabled=o;if(!o&&S.coins<c.pr)b.textContent='🔒 Need 🪙'+(c.pr-S.coins);b.onclick=()=>{if(S.own.includes(c.id))return;if(S.coins<c.pr){toast('Not enough coins - win matches to earn more');return}buy('buy_character',{cid:c.id},()=>{S.coins-=c.pr;S.own.push(c.id)},c.n+' unlocked!')};d.append(b);el.append(d);portrait(c,d.firstChild)});rpg();$('#st').scrollTop=sy}
+const AV=['🥷','🐉','🦊','🐺','🦅','🔥','⚡','🌸','💀','👑'];let lbT=0,lbLast='';
+function rav(){const e=$('#avr');e.innerHTML='';AV.forEach((a,i)=>{const b=document.createElement('button');b.style.minWidth='0';b.style.fontSize='22px';b.className=i===S.av?'sel':'';b.textContent=a;b.onclick=()=>{S.av=i;save();rav();cloudPrefs()};e.append(b)})}
+async function lbCtx(){try{if(typeof claude==='undefined')return null;const[d,u]=await Promise.all([claude.use('db'),claude.use('user')]);if(!d||!u)return null;const id=await u.id();return id?{d,id}:null}catch(e){return null}}
+async function pushLB(c){if(!c)return;const o={name:S.name,av:S.av,kills:S.kills,coins:S.coins,wins:S.w},j=JSON.stringify(o);if(j===lbLast)return;try{await c.d.collection('lb').doc(c.id).set(o);lbLast=j}catch(e){}}
+async function rlb(){const el=$('#lbl');$('#t0').className=lbT?'':'sel';$('#t1').className=lbT?'sel':'';el.textContent='Loading...';const c=CLOUD?null:await lbCtx();let rows=[],sh=!!c,mine=0;if(CLOUD){try{const{data,error}=await sb.from('leaderboard').select('*').order(lbT?'coins':'kills',{ascending:false}).order(lbT?'kills':'wins',{ascending:false}).order('sk').limit(25);if(error)throw error;rows=data.map(x=>({name:x.username,av:x.avatar,kills:x.kills,coins:x.coins,wins:x.wins,lv:1+((x.xp/100)|0),me:x.me}));if(UID){const k=await sb.rpc('my_rank');if(k.data)mine=k.data[lbT?'coins':'kills']}sh=1}catch(e){}}
+ if(c){await pushLB(c);try{const s=await c.d.collection('lb').orderBy(lbT?'coins':'kills','desc').limit(10).get();rows=s.docs.map(x=>({...x.data(),me:x.id===c.id}))}catch(e){sh=false}}
+ if(!CLOUD&&(!sh||!rows.length)){sh=false;rows=[{name:S.name,av:S.av,kills:S.kills,coins:S.coins,me:1}]}
+ el.innerHTML=CLOUD&&!rows.length?'<div class="lr">No players on the board yet.</div>':'';rows.forEach((r,i)=>{const d=document.createElement('div');d.className='lr'+(r.me?' me':'');const a=document.createElement('b'),v=document.createElement('span'),n=document.createElement('span'),s=document.createElement('b');a.textContent='#'+(i+1);v.textContent=AV[r.av]||AV[0];n.className='nm';n.textContent=String(r.name||'Warrior').slice(0,14)+(r.lv?' · Lv'+r.lv+' · '+(r.wins|0)+'W':'');s.textContent=lbT?'🪙 '+(r.coins|0):'⚔ '+(r.kills|0);d.append(a,v,n,s);el.append(d)});
+ $('#lbn').textContent=sh?'Shared board: players who open this page signed in. "Kills" = matches won by K.O.':'Shared board unavailable here, so this shows only you. Open the page signed in to compete with others.';if(CLOUD)$('#lbn').textContent=sh?'Worldwide ranking of every registered player. '+(mine?'Your rank: #'+mine+'. ':'')+'Kills = matches won by K.O. Coins = current balance. Refreshes every 10 seconds.':'Could not load the leaderboard. Check your connection and try again.'}
+function rprof(){$('#nm').value=S.name;rav();$('#ps').innerHTML=`🪙 ${S.coins} coins · Wins ${S.w} · Losses ${S.l} · K.O. kills ${S.kills} · Fighters ${S.own.length}/${C.length}`;
+ $('#ms').innerHTML=M.map(m=>`<div>${S.m.done.includes(m.id)?'✅':'⬜'} ${m.t} (${Math.min(S.m[m.k],m.g)}/${m.g}) +${m.r}🪙</div>`).join('');
+ $('#hs').innerHTML=S.hist.length?S.hist.map(h=>`<div>${h.r} vs ${h.o} (${h.d})</div>`).join(''):'<div>No matches yet</div>'}
+function applyT(){const z=[0,.85,1,1.2][S.tsz],l=S.lh,bt=$('#bt');bt.style.transformOrigin=l?'bottom left':'bottom right';bt.style.transform=`scale(${z})`;bt.style.right=l?'auto':'14px';bt.style.left=l?'14px':'auto';bt.style.justifyContent=l?'flex-start':'flex-end';jy.style.transformOrigin=l?'bottom right':'bottom left';jy.style.transform=`scale(${z})`;jy.style.left=l?'auto':'18px';jy.style.right=l?'18px':'auto';jy.style.display=S.ctl?'none':'block';const ar=$('#ar');ar.style.display=S.ctl?'flex':'none';ar.style.left=l?'auto':'14px';ar.style.right=l?'14px':'auto';ar.style.transformOrigin=l?'bottom right':'bottom left';ar.style.transform=`scale(${z})`}
+function rset(){$('#b1').textContent='Music: '+(S.mus?'On':'Off');$('#b2').textContent='Sound effects: '+(S.snd?'On':'Off');$('#b3').textContent='Screen shake: '+(S.shk?'On':'Off');$('#b4').textContent='Touch layout: '+(S.lh?'Left-handed':'Right-handed');$('#b5').textContent='Touch button size: '+['','Small','Medium','Large'][S.tsz];$('#lo').style.display=CLOUD?'':'none';$('#b6').textContent='Touch movement: '+(S.ctl?'Arrow buttons':'Joystick');$('#mv').value=S.mv;$('#sv').value=S.sv;applyT();
+ const kb=$('#kb'),nm={left:'Left',right:'Right',up:'Jump',punch:'Punch',kick:'Kick',sp:'Special',ult:'Ultimate',dodge:'Dodge',block:'Block'};kb.innerHTML='';
+ for(const a in DK){const b=document.createElement('button');b.style.minWidth='0';b.className=RB===a?'sel':'';b.textContent=nm[a]+': '+(RB===a?'press a key...':(S.keys[a]||DK[a]).replace('Key',''));b.onclick=()=>{RB=a;rset()};kb.append(b)}
+ const r=document.createElement('button');r.style.minWidth='0';r.textContent='Reset keys';r.onclick=()=>{S.keys={};RB=null;save();bk();rset()};kb.append(r)}
+function portrait(c,cn){const o=X,og=GY;X=cn.getContext('2d');GY=cn.height-10;drawF(mk(c,cn.width/2,1));X=o;GY=og}
+function start(tr){const ch=C.find(c=>c.id===S.ch),cp=C.filter(c=>c.id!==S.ch)[Math.random()*(C.length-1)|0];
+ G={tr,a:mk(ch,250,1),b:mk(cp,750,-1),p:[],fx:[],time:60,over:0,fl:0,hits:0,sk:0,ar:S.ar,pc:{}};G.b.ai={t:0,k:{}};
+ $('#rb1').style.display=$('#rb2').style.display='';show(null);applyT();rpw();if(touch)$('#tc').style.display='block';$('#q').style.display='block';beep(440,.3)}
+function ult(a,o){a.en=0;a.pw=10;a.st='ult';a.t=.8;a.hd=0;a.inv=.3;G.fl=.5;beep(90,.6,'sawtooth',.12);if(a===G.a){S.m.ult++;G.ul=1}}
+function dm(b,a,d,kb){if(b.inv>0||G.over)return;d*=a.ch.dm*(a.pw>0?1.4:1)*(1+Math.min(a.cb,6)*.06);
+ if(b.st==='block'&&(a.x-b.x)*b.f>0){beep(180,.08,'sawtooth');if(b.bt<.25){a.st='hurt';a.t=.6;a.vx=-a.f*300;b.en=Math.min(100,b.en+10);G.fx.push({x:b.x,y:b.y+110,t:.3,c:'#fff'})}else b.en=Math.min(100,b.en+3);d*=.12}
+ else{b.st='hurt';b.t=.35;b.vx=a.f*kb*30;if(b.y>0)b.vy=250;a.cb++;a.cbt=1.2;a.en=Math.min(100,a.en+d*.6);b.en=Math.min(100,b.en+d*.3);beep(120+Math.random()*60,.08,'square',.1);G.sk=.15;if(a===G.a)G.hits++;G.fx.push({x:b.x,y:b.y+90,t:.25,c:a.ch.c})}
+ if(!(G.tr&&b===G.b))b.hp=Math.max(0,b.hp-d)}
+function hit(a,o,r,d,kb){if(Math.abs(o.x-a.x)<r&&(o.x-a.x)*a.f>-10&&Math.abs(o.y-a.y)<90)dm(o,a,d,kb)}
+function fz(a,k,dt,o){a.cd-=dt;a.inv-=dt;a.spd-=dt;a.bt+=dt;a.cbt-=dt;if(a.cbt<=0)a.cb=0;if(a.pw>0)a.pw-=dt;
+ if(a.t>0){a.t-=dt;if(a.t<=0&&(a.st==='hurt'||a.st==='punch'||a.st==='kick'||a.st==='sp'||a.st==='ult'||a.st==='dodge'))a.st='idle'}
+ const g=a.y<=0,fr=a.st==='idle'||a.st==='walk'||a.st==='block';
+ if(fr){a.f=o.x>a.x?1:-1;
+  if(k.block&&g){if(a.st!=='block'){a.st='block';a.bt=0}a.vx=0}
+  else{const d=(k.right?1:0)-(k.left?1:0);a.vx=d*a.ch.sp*60*(a.spd>0?1.6:1);a.st=d?'walk':'idle';if(k.up&&g)a.vy=760*a.ch.jp;
+   if(k.dodge&&a.cd<=0&&g){a.inv=.3;a.cd=.6;a.vx=(d||-a.f)*620;a.t=.2;a.st='dodge'}
+   else if(k.ult&&a.en>=100)ult(a,o);
+   else if(k.sp&&a.en>=25&&a.cd<=0){a.en-=25;a.st='sp';a.t=.35;a.cd=.5;a.hd=0}
+   else if(k.punch&&a.cd<=0){a.st='punch';a.t=.2;a.cd=.22;a.hd=0}
+   else if(k.kick&&a.cd<=0){a.st='kick';a.t=.32;a.cd=.42;a.hd=0}}}
+ else a.vx*=Math.pow(.02,dt)*(a.st==='dodge'?1.3:1);
+ if(a.st==='punch'&&a.t<.1&&!a.hd){a.hd=1;hit(a,o,80,6,9);beep(300,.05)}
+ if(a.st==='kick'&&a.t<.16&&!a.hd){a.hd=1;hit(a,o,95,10,14);beep(240,.06)}
+ if(a.st==='sp'&&a.t<.2&&!a.hd){a.hd=1;G.p.push({x:a.x+a.f*40,y:a.y+80,vx:a.f*11,o:a,d:12,r:20,c:a.ch.c,l:1.5});beep(520,.2,'sine',.1)}
+ if(a.st==='ult'&&a.t<.5&&!a.hd){a.hd=1;G.p.push({x:a.x+a.f*50,y:a.y+80,vx:a.f*15,o:a,d:34,r:50,c:a.ch.h,l:1.5});beep(700,.35,'sine',.12)}
+ a.x+=a.vx*dt;a.vy-=2000*dt;a.y+=a.vy*dt;if(a.y<0){a.y=0;a.vy=0}
+ a.x=Math.max(40,Math.min(960,a.x));if(g&&o.y<=0&&Math.abs(a.x-o.x)<30)a.x+=(a.x<o.x?-1:1)*2}
+function ai(b,a,dt){const p=P[S.diff],A=b.ai;A.t-=dt;if(A.t>0)return;A.t=p.th+Math.random()*.08;const k=b.k=A.k={},d=Math.abs(a.x-b.x),r=Math.random;
+ const thr=['punch','kick','ult'].includes(a.st)||G.p.some(q=>q.o===a&&Math.abs(q.x-b.x)<300);
+ if(thr&&d<150&&r()<p.bl){if(r()<p.dg)k.dodge=1;else k.block=1;return}
+ if(b.en>=100&&r()<.8){k.ult=1;return}
+ if(d>200){if(b.en>=25&&r()<p.sp)k.sp=1;else if(r()<.85)k[a.x>b.x?'right':'left']=1}
+ else if(d>100){if(r()<.6)k[a.x>b.x?'right':'left']=1;else k.kick=1}
+ else{if(r()<p.at){if(r()<.5)k.punch=1;else k.kick=1}else if(r()<.3)k[a.x>b.x?'left':'right']=1;else if(r()<.15)k.up=1}}
+function step(dt){if(G.on){G.fl=Math.max(0,G.fl-dt);G.sk-=dt;G.fx.forEach(f=>f.t-=dt);G.fx=G.fx.filter(f=>f.t>0);[G.a,G.b].forEach(o=>{if(o.tx!==undefined)o.x+=(o.tx-o.x)*Math.min(1,dt*20)});if(!G.over)sendIn();return}G.fl=Math.max(0,G.fl-dt);PW.forEach(p=>{G.pc[p.id]=Math.max(0,(G.pc[p.id]||0)-dt);const b=$('#pb'+p.id);if(b){b.lastChild.style.height=G.pc[p.id]/p.cd*100+'%';b.classList.toggle('cd',G.pc[p.id]>0)}});G.sk-=dt;G.fx.forEach(f=>f.t-=dt);G.fx=G.fx.filter(f=>f.t>0);if(G.over)return;const{a,b}=G;
+ if(!G.tr)G.time-=dt;else{a.en=Math.max(a.en,60);a.hp=a.mhp}
+ fz(a,K,dt,b);if(G.tr)b.k={};else ai(b,a,dt);fz(b,b.k,dt,a);
+ G.p=G.p.filter(p=>{p.x+=p.vx*60*dt;p.l-=dt;const o=p.o===a?b:a;if(Math.abs(p.x-o.x)<p.r+20&&Math.abs(p.y-(o.y+70))<p.r+60){dm(o,p.o,p.d,10);return false}return p.l>0&&p.x>-100&&p.x<1100});
+ if(!G.tr&&(a.hp<=0||b.hp<=0||G.time<=0))endM()}
+function endM(){G.over=1;const w=G.a.hp>G.b.hp,rw=w?[30,50,80,120][S.diff]:5;S.coins+=rw;if(w){S.w++;S.m.win++}else S.l++;S.m.hit+=G.hits;if(w&&G.b.hp<=0)S.kills++;
+ S.hist.unshift({r:w?'Win':'Loss',o:G.b.ch.n,d:DF[S.diff]});S.hist=S.hist.slice(0,8);chk();save();if(CLOUD)rpc('finish_match',{mid:crypto.randomUUID(),won:w,ko:w&&G.b.hp<=0,diff:S.diff,opp:G.b.ch.n,hits:G.hits,ult:!!G.ul});else lbCtx().then(c=>pushLB(c));beep(w?660:150,.6,'triangle',.12);
+ setTimeout(()=>{if(!G)return;$('#rt').textContent=w?'VICTORY!':'DEFEAT';$('#rd').textContent=`+${rw} coins`;show('res')},1400)}
+function ln(x1,y1,x2,y2,w,c){X.strokeStyle=c;X.lineWidth=w;X.beginPath();X.moveTo(x1,y1);X.lineTo(x2,y2);X.stroke()}
+function drawF(a){const c=a.ch,s=a.st;X.save();X.translate(a.x,GY-a.y);X.scale(a.f,1);X.lineCap='round';
+ X.fillStyle='rgba(0,0,0,.3)';X.beginPath();X.ellipse(0,a.y,28,7,0,0,7);X.fill();
+ X.shadowColor=a.pw>0?'#ffe34a':c.c;X.shadowBlur=a.pw>0?28:6;
+ const run=s==='walk'?Math.sin(T*16)*16:0,bob=s==='idle'?Math.sin(T*5)*2:0;X.translate(s==='hurt'?-8:0,bob);
+ ln(-7,-52,-7+run,0,12,'#1d1b30');if(s==='kick')ln(7,-52,72,-70,12,'#1d1b30');else ln(7,-52,7-run,0,12,'#1d1b30');
+ X.fillStyle=c.c;X.beginPath();X.roundRect(-17,-112,34,64,9);X.fill();ln(-17,-78,17,-78,5,c.h);
+ X.fillStyle='#f6d2a8';X.beginPath();X.arc(2,-130,15,0,7);X.fill();
+ X.fillStyle=a.pw>0?'#ffe34a':c.h;X.beginPath();X.moveTo(-14,-134);X.lineTo(-20,-162);X.lineTo(-5,-146);X.lineTo(2,-170);X.lineTo(9,-146);X.lineTo(24,-160);X.lineTo(18,-132);X.fill();
+ X.fillStyle='#111';X.fillRect(8,-133,4,5);
+ const ar=s==='punch'?[72,-100]:s==='sp'||s==='ult'?[56,-96]:s==='block'?[22,-122]:[24,-78];
+ ln(-10,-102,-18,-70,11,'#f6d2a8');ln(8,-102,ar[0],ar[1],11,'#f6d2a8');
+ if(s==='sp'||s==='ult'){X.fillStyle=c.c;X.beginPath();X.arc(ar[0]+8,ar[1],12+Math.sin(T*40)*3,0,7);X.fill()}
+ if(a.inv>.4){X.strokeStyle='#4fd1ff';X.lineWidth=3;X.beginPath();X.arc(0,-85,62,0,7);X.stroke()}
+ X.restore()}
+function sc(i){const f=c=>X.fillStyle=c;
+ if(i==0){f('#5a6b8c');for(let k=-2;k<8;k++){X.beginPath();X.moveTo(k*220-100,440);X.lineTo(k*220+30,170+(k+9)%3*40);X.lineTo(k*220+160,440);X.fill()}}
+ if(i==1){for(let k=-4;k<18;k++){const h=120+(k+9)*37%5*50;f('#241447');X.fillRect(k*80-100,440-h,64,h);f('#ff2d95');for(let y=450-h;y<430;y+=24)X.fillRect(k*80-90,y,6,8)}}
+ if(i==2){f('#5b3322');for(let k=-1;k<5;k++)X.fillRect(k*250-50,200,50,240);X.fillRect(-250,170,1500,36)}
+ if(i==3){for(let k=-3;k<14;k++){f('#3b2a1a');X.fillRect(k*90-10,320,20,120);f(k%2?'#1f6b3a':'#2a8a4a');X.beginPath();X.arc(k*90,300,50,0,7);X.fill()}}
+ if(i==4){f('#fff0b0');X.beginPath();X.arc(760,160,60,0,7);X.fill();f('#e9b868');for(let k=-2;k<7;k++){X.beginPath();X.ellipse(k*260,445,200,70+(k+9)%2*30,0,Math.PI,0,true);X.fill()}}}
+function bar(x,y,w,v,c,r){X.fillStyle='#000a';X.fillRect(x,y,w,12);X.fillStyle=c;const ww=w*Math.max(0,v);X.fillRect(r?x+w-ww:x,y,ww,12);X.strokeStyle='#fff';X.lineWidth=1.5;X.strokeRect(x,y,w,12)}
+function draw(){const A=AR[G?G.ar:S.ar];X.setTransform(1,0,0,1,0,0);const gr=X.createLinearGradient(0,0,0,H);gr.addColorStop(0,A.s[0]);gr.addColorStop(1,A.s[1]);X.fillStyle=gr;X.fillRect(0,0,W,H);
+ const s0=Math.min(W/1000,H/560);let z=1,cx=500;if(G){cx=(G.a.x+G.b.x)/2;z=1+Math.max(0,.2-Math.abs(G.a.x-G.b.x)/3000)}
+ X.translate(W/2+(G&&G.sk>0&&S.shk?(Math.random()-.5)*8:0),H/2);X.scale(s0*z,s0*z);X.translate(-cx,-300);
+ sc(A.i);X.fillStyle=A.g;X.fillRect(-500,440,2000,600);X.fillStyle='#ffffff33';X.fillRect(-500,440,2000,3);
+ if(!G)return;
+ GY=440;drawF(G.a);drawF(G.b);
+ G.p.forEach(p=>{X.save();X.shadowColor=p.c;X.shadowBlur=25;X.fillStyle=p.c;X.beginPath();X.arc(p.x,GY-p.y,p.r,0,7);X.fill();X.fillStyle='#fff';X.beginPath();X.arc(p.x,GY-p.y,p.r*.5,0,7);X.fill();X.restore()});
+ G.fx.forEach(f=>{X.fillStyle=f.c;X.globalAlpha=f.t*3;X.beginPath();X.arc(f.x,GY-f.y,40*(1-f.t*2),0,7);X.fill();X.globalAlpha=1});
+ X.setTransform(1,0,0,1,0,0);const bw=Math.min(W*.38,420),m=12,y=Math.max(10,parseFloat(getComputedStyle(document.documentElement).paddingTop)||0)+8;
+ X.font='bold 14px system-ui';X.fillStyle='#fff';X.textAlign='left';X.fillText(G.on?G.nm[0]:G.a.ch.n,m,y+10);X.textAlign='right';X.fillText(G.on?G.nm[1]:G.b.ch.n+(G.tr?' (Dummy)':''),W-m,y+10);
+ bar(m,y+16,bw,G.a.hp/G.a.mhp,'#4ade80');bar(W-m-bw,y+16,bw,G.b.hp/G.b.mhp,'#4ade80',1);
+ bar(m,y+34,bw*.7,G.a.en/100,G.a.en>=100?'#ffe34a':'#4fd1ff');bar(W-m-bw*.7,y+34,bw*.7,G.b.en/100,G.b.en>=100?'#ffe34a':'#4fd1ff',1);
+ X.textAlign='center';X.font='bold 26px system-ui';X.fillText(G.tr?'TRAINING':Math.ceil(Math.max(0,G.time)),W/2,y+30);
+ if(G.a.cb>1){X.font='bold 22px system-ui';X.fillStyle='#ffe34a';X.fillText(G.a.cb+' HIT COMBO',W/2,y+80)}
+ if(G.a.en>=100&&!G.over){X.font='14px system-ui';X.fillStyle='#ffe34a';X.fillText('ULTIMATE READY (I)',W/2,y+54)}
+ if(G.fl>0){X.fillStyle=`rgba(255,255,255,${G.fl})`;X.fillRect(0,0,W,H)}
+ if(G.over){X.font='bold 80px system-ui';X.fillStyle='#ff4f6d';X.fillText('K.O.',W/2,H/2)}}
+let last=performance.now();function loop(n){const dt=Math.min(.033,(n-last)/1000);last=n;T+=dt;if(G)step(dt);draw();requestAnimationFrame(loop)}requestAnimationFrame(loop);
+function applyP(r){S.name=r.username;S.coins=r.coins;S.own=r.own;S.pw=r.powers;S.w=r.wins;S.l=r.losses;S.kills=r.kills;S.av=r.avatar;S.ch=r.selected;S.hist=r.hist||[];S.xp=r.xp;S.m=Object.assign({win:0,hit:0,ult:0},r.mc,{done:r.md||[]})}
+async function rpc(fn,args){try{const n0=S.m.done.length,{data,error}=await sb.rpc(fn,args);if(error)throw error;if(data&&data.username){applyP(data);if(S.m.done.length>n0)toast('Mission complete! Bonus coins added')}return data||true}catch(e){toast(e.message||'Server error');return null}}
+async function buy(fn,args,local,msg){if(CLOUD){if(!await rpc(fn,args))return}else{local();save()}rstore();toast(msg)}
+async function cloudPrefs(){if(!CLOUD)return;if(!await rpc('set_prefs',{uname:S.name,av:S.av,sel:S.ch}))await loadP();rprof()}
+async function loadP(nn){const{data,error}=await sb.from('profiles').select('*').eq('id',UID).maybeSingle();if(error)throw error;let r=data;if(!r){const n=nn||prompt('No profile found. Choose a username (3-14 letters, numbers, _):');if(!n)throw Error('Username required');const x=await sb.rpc('create_profile',{uname:n});if(x.error)throw x.error;r=x.data}applyP(r)}
+async function migrate(){let L;try{L=JSON.parse(localStorage.sw||'null')}catch(e){}if(!L||localStorage['sw_mig_'+UID])return;
+ const o=L.own||[],fresh=S.w+S.l+S.kills===0&&S.own.length<=2;if((L.coins|0)<=100&&!L.kills&&!L.w&&o.length<=2)return;
+ const ok=confirm(`Saved progress found on this device:\n${L.name||'?'}: coins ${L.coins|0}, wins ${L.w|0}, kills ${L.kills|0}, fighters ${o.length}\n\nThis account (${S.name}): coins ${S.coins}, wins ${S.w}, kills ${S.kills}, fighters ${S.own.length}\n\n`+(fresh?'Import the device progress into this account?':'MERGE: keep the higher value of each stat and combine fighters (nothing is added together)?')+'\n\nLimits: imports are capped (1000 coins, 100 kills, 100 wins) and happen once per account. Your device data is not deleted.');
+ localStorage['sw_mig_'+UID]=ok?'done':'skipped';if(ok)await rpc('import_local',{c:L.coins|0,k:L.kills|0,w:L.w|0,l:L.l|0,o:o,p:L.pw||[]})}
+async function boot(nn){try{await loadP(nn);await migrate();const c0=S.coins;await rpc('claim_daily');if(S.coins>c0)toast('Daily login reward: +'+(S.coins-c0)+' coins');show('menu')}catch(e){$('#aum').textContent=e.message||'Error';show('au')}}
+async function auth(su){const e=$('#ae').value.trim(),p=$('#ap').value,u=$('#an').value.trim();$('#aum').textContent='Please wait...';try{if(su&&!/^[A-Za-z0-9_ ]{3,14}$/.test(u))throw Error('Username: 3-14 letters, numbers or _');const r=su?await sb.auth.signUp({email:e,password:p}):await sb.auth.signInWithPassword({email:e,password:p});if(r.error)throw r.error;if(!r.data.session)throw Error('Confirm your email first, then log in.');UID=r.data.user.id;await boot(su?u:null)}catch(x){$('#aum').textContent=x.message}}
+// ===== ONLINE PVP: set PVP_URL to your deployed server address, e.g. 'wss://shadow-warriors.onrender.com' =====
+const PVP_URL='';let ws=null,ik=-1,it=0;
+const sendW=o=>{if(!PVP_URL)return p2pSend(o);if(ws&&ws.readyState===1)ws.send(JSON.stringify(o))},pvs=m=>$('#pvs').textContent=m,me=()=>({name:S.name,ch:S.ch});
+function pvOpen(){if(!PVP_URL){loadPeer();return}if(ws&&ws.readyState<=1){pvs('Connected. Pick an option.');return}pvs('Connecting...');ws=new WebSocket(PVP_URL);ws.onopen=()=>pvs('Connected. Pick an option.');ws.onmessage=pm;ws.onerror=()=>pvs('Cannot reach the online server.');ws.onclose=()=>{ws=null;$('#pvo').textContent='';if(G&&G.on){G=null;toast('Connection to the server was lost');show('pv')}pvs('Disconnected from the server. Re-open this screen to reconnect.')}}
+function pq(){if(!PVP_URL)pquick();else if(ws)sendW({t:'queue',...me()});else pvOpen()}
+function pc(){if(!PVP_URL)pcreate();else if(ws)sendW({t:'create',...me()});else pvOpen()}
+function pj(){const c=$('#pvc').value.trim().toUpperCase();if(c.length!==4){pvs('Enter the 4-letter room code.');return}if(!PVP_URL)pjoin(c);else if(ws)sendW({t:'join',code:c,...me()});else pvOpen()}
+function pl(){if(!PVP_URL){if(matchOn){HOST.stop(1,'left');setTimeout(kill,600)}else kill();pvs('Ready. Quick match, create a room, or join with a code.');return}sendW({t:'leave'});if(ws)pvs('Connected. Pick an option.')}
+// ===== PEER-TO-PEER MODE (used while PVP_URL is empty): no server of your own needed. The player who creates the room runs the fight; the other player sends key presses. =====
+let peer=null,conn=null,hosting=0,matchOn=0;
+const newCode=()=>Array.from({length:4},()=>'ABCDEFGHJKLMNPQRSTUVWXYZ'[Math.random()*24|0]).join(''),needP=()=>{if(window.Peer)return false;pvs('The online service is still loading or is unavailable. Wait a moment and try again.');return true};
+function loadPeer(){$('#pvo').textContent='Peer-to-peer mode';if(window.Peer){pvs('Ready. Quick match, create a room, or join with a code.');return}pvs('Loading the online service...');const s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js';s.onload=()=>pvs('Ready. Quick match, create a room, or join with a code.');s.onerror=()=>pvs('Cannot load the online service. Check your internet connection.');document.head.append(s)}
+function kill(){try{conn&&conn.close()}catch(e){}try{peer&&peer.destroy()}catch(e){}conn=peer=null;hosting=0}
+function p2pSend(o){if(o.t==='in'){if(hosting)HOST.inp(0,o.k);else if(conn&&conn.open)conn.send(o)}else if(o.t==='leave')pl()}
+function p2pCreate(code){return new Promise(res=>{kill();let done=0;const f=x=>{if(!done){done=1;res(x)}},tm=setTimeout(()=>{kill();f('fail')},12000);peer=new Peer('swar-'+code);
+ peer.on('error',e=>{clearTimeout(tm);if(!done)f(e.type==='unavailable-id'?'taken':'fail');else toast('Network error: '+e.type)});
+ peer.on('open',()=>{clearTimeout(tm);hosting=1;f('ok')});
+ peer.on('connection',c=>{if(matchOn||(conn&&conn.open)){c.on('open',()=>{c.send({t:'busy'});setTimeout(()=>c.close(),400)});return}conn=c;c.on('data',hmsg);c.on('close',()=>{if(conn===c){conn=null;if(matchOn)HOST.stop(0,'left')}})})})}
+function p2pJoin(code){return new Promise(res=>{kill();let done=0;const f=x=>{if(!done){done=1;res(x)}},tm=setTimeout(()=>{kill();f('fail')},12000);peer=new Peer();
+ peer.on('error',e=>{clearTimeout(tm);if(!done)f(e.type==='peer-unavailable'?'none':'fail');else toast('Network error: '+e.type)});
+ peer.on('open',()=>{const c=conn=peer.connect('swar-'+code);c.on('open',()=>c.send({t:'join',...me()}));
+  c.on('data',m=>{clearTimeout(tm);if(m.t==='busy')f('busy');else{f('ok');pmo(m)}});
+  c.on('close',()=>{if(G&&G.on&&!G.over){G=null;toast('The other player disconnected');show('pv')}})})})}
+async function pcreate(){if(needP())return;pvs('Creating room...');for(let i=0;i<5;i++){const code=newCode(),r=await p2pCreate(code);if(r==='ok'){pvs('Room created! Send this code to your friend: '+code+'  (waiting for them to join...)');return}if(r==='fail'){pvs('Could not reach the online service. Try again later.');return}}pvs('Could not create a room. Try again.')}
+async function pjoin(c){if(needP())return;pvs('Connecting to room '+c+'...');const r=await p2pJoin(c);if(r==='none')pvs('Room '+c+' was not found. Check the code.');else if(r==='busy')pvs('That room is already full.');else if(r==='fail')pvs('Could not connect to the other player. Their network may block direct connections, or the service is down.');else pvs('Connected! Starting match...')}
+async function pquick(){if(needP())return;pvs('Searching for an opponent...');let tries=0;for(let rd=0;rd<3;rd++){for(let i=1;i<=5;i++){const r=await p2pJoin('Q'+i);if(r==='ok')return;if(r==='fail'){pvs('Could not reach the online service. Try again later.');return}if(r==='none'){const c=await p2pCreate('Q'+i);if(c==='ok'){pvs('Waiting for an opponent... (another player must press Quick match)');return}if(c==='taken'&&tries++<4){i--;continue}}}await new Promise(r=>setTimeout(r,1500))}pvs('No opponent found. Try again, or create a room and share the code.')}
+function hmsg(m){if(m.t==='join'&&!matchOn){matchOn=1;HOST.start([S.name,String(m.name||'Player').replace(/[^\w ]/g,'').slice(0,14)||'Player'],[S.ch,m.ch],(i,x)=>{if(i)conn&&conn.open&&conn.send(x);else pmo(x)},()=>{matchOn=0;setTimeout(kill,800)})}else if(m.t==='in'&&matchOn)HOST.inp(1,m.k)}
+const HOST=(()=>{const CH={kaito:[100,5,1.1,1],mika:[90,6.5,.95,1.2],gorou:[140,3.8,1.35,.85],sora:[100,5.5,1.05,1.1],zen:[85,6,1.25,1.15]};let r=null;
+ const mkF=(id,x,f)=>{const s=CH[id]||CH.kaito;return{x,y:0,vx:0,vy:0,f,hp:s[0],en:0,st:'idle',t:0,cd:0,inv:0,pw:0,cb:0,cbt:0,bt:0,hd:0,k:0,sp:s[1],dm:s[2],jp:s[3]}};
+ function dm(b,a,d,kb){if(b.inv>0||r.over)return;d*=a.dm*(a.pw>0?1.4:1)*(1+Math.min(a.cb,6)*.06);
+  if(b.st==='block'&&(a.x-b.x)*b.f>0){if(b.bt<.25){a.st='hurt';a.t=.6;a.vx=-a.f*300;b.en=Math.min(100,b.en+10)}else b.en=Math.min(100,b.en+3);d*=.12}
+  else{b.st='hurt';b.t=.35;b.vx=a.f*kb*30;if(b.y>0)b.vy=250;a.cb++;a.cbt=1.2;a.en=Math.min(100,a.en+d*.6);b.en=Math.min(100,b.en+d*.3);r.ev.push([b.x|0,(b.y+90)|0])}
+  b.hp=Math.max(0,b.hp-d)}
+ const hit=(a,o,rg,d,kb)=>{if(Math.abs(o.x-a.x)<rg&&(o.x-a.x)*a.f>-10&&Math.abs(o.y-a.y)<90)dm(o,a,d,kb)};
+ function fz(a,dt,o){const k=a.k;a.cd-=dt;a.inv-=dt;a.bt+=dt;a.cbt-=dt;if(a.cbt<=0)a.cb=0;if(a.pw>0)a.pw-=dt;
+  if(a.t>0){a.t-=dt;if(a.t<=0&&a.st!=='idle'&&a.st!=='walk'&&a.st!=='block')a.st='idle'}
+  const g=a.y<=0,fr=a.st==='idle'||a.st==='walk'||a.st==='block';
+  if(fr){a.f=o.x>a.x?1:-1;
+   if((k&256)&&g){if(a.st!=='block'){a.st='block';a.bt=0}a.vx=0}
+   else{const d=((k&2)?1:0)-((k&1)?1:0);a.vx=d*a.sp*60;a.st=d?'walk':'idle';if((k&4)&&g)a.vy=760*a.jp;
+    if((k&128)&&a.cd<=0&&g){a.inv=.3;a.cd=.6;a.vx=(d||-a.f)*620;a.t=.2;a.st='dodge'}
+    else if((k&64)&&a.en>=100){a.en=0;a.pw=10;a.st='ult';a.t=.8;a.hd=0;a.inv=.3}
+    else if((k&32)&&a.en>=25&&a.cd<=0){a.en-=25;a.st='sp';a.t=.35;a.cd=.5;a.hd=0}
+    else if((k&8)&&a.cd<=0){a.st='punch';a.t=.2;a.cd=.22;a.hd=0}
+    else if((k&16)&&a.cd<=0){a.st='kick';a.t=.32;a.cd=.42;a.hd=0}}}
+  else a.vx*=Math.pow(.02,dt)*(a.st==='dodge'?1.3:1);
+  if(a.st==='punch'&&a.t<.1&&!a.hd){a.hd=1;hit(a,o,80,6,9)}
+  if(a.st==='kick'&&a.t<.16&&!a.hd){a.hd=1;hit(a,o,95,10,14)}
+  if(a.st==='sp'&&a.t<.2&&!a.hd){a.hd=1;r.p.push({x:a.x+a.f*40,y:a.y+80,vx:a.f*11,o:a,d:12,r:20,l:1.5,u:0})}
+  if(a.st==='ult'&&a.t<.5&&!a.hd){a.hd=1;r.p.push({x:a.x+a.f*50,y:a.y+80,vx:a.f*15,o:a,d:34,r:50,l:1.5,u:1})}
+  a.x+=a.vx*dt;a.vy-=2000*dt;a.y+=a.vy*dt;if(a.y<0){a.y=0;a.vy=0}
+  a.x=Math.max(40,Math.min(960,a.x));if(g&&o.y<=0&&Math.abs(a.x-o.x)<30)a.x+=(a.x<o.x?-1:1)*2}
+ function snap(){const m={t:'s',tm:+Math.max(0,r.time).toFixed(1),f:r.f.map(a=>[a.x|0,a.y|0,a.f,a.st,Math.ceil(a.hp),a.en|0,a.pw>0?1:0,0,a.cb]),p:r.p.map(q=>[q.x|0,q.y|0,q.r,r.f[0]===q.o?0:1,q.u]),ev:r.ev};r.ev=[];r.send(0,m);r.send(1,m)}
+ function fin(w,why){if(r.over)return;r.over=1;clearInterval(r.iv);[0,1].forEach(i=>r.send(i,{t:'end',w:w<0?-1:(w===i?1:0),why}));r.done&&r.done()}
+ function tick(){if(r.w>0){r.w--;snap();return}const[a,b]=r.f,dt=1/30;r.time-=dt;fz(a,dt,b);fz(b,dt,a);
+  r.p=r.p.filter(p=>{p.x+=p.vx*2;p.l-=dt;const o=p.o===a?b:a;if(Math.abs(p.x-o.x)<p.r+20&&Math.abs(p.y-(o.y+70))<p.r+60){dm(o,p.o,p.d,10);return false}return p.l>0&&p.x>-100&&p.x<1100});
+  snap();if(a.hp<=0||b.hp<=0||r.time<=0)fin(a.hp>b.hp?0:b.hp>a.hp?1:-1,'ko')}
+ return{start(n,c,send,done){r={f:[mkF(c[0],250,1),mkF(c[1],750,-1)],p:[],ev:[],time:60,w:45,over:0,send,done};const ar=Math.random()*5|0;[0,1].forEach(i=>send(i,{t:'start',you:i,n,c,ar}));r.iv=setInterval(tick,33)},inp(i,k){if(r&&!r.over)r.f[i].k=k&511},stop(w,why){if(r&&!r.over)fin(w,why)}}})();
+function pm(e){let m;try{m=JSON.parse(e.data)}catch(x){return}pmo(m)}
+function pmo(m){
+ if(m.t==='online')$('#pvo').textContent='🟢 Players online: '+m.n;
+ else if(m.t==='wait')pvs(m.code?'Room created! Send this code to your friend: '+m.code+'  (waiting for them to join...)':'Searching for an opponent...');
+ else if(m.t==='err')pvs(m.m);
+ else if(m.t==='start')ostart(m);else if(m.t==='s')osnap(m);else if(m.t==='end')oend(m)}
+function ostart(m){const me=m.you,cm=i=>C.find(c=>c.id===m.c[i])||C[0],a=mk(cm(me),250,me?-1:1),b=mk(cm(1-me),750,me?1:-1);
+ G={on:1,tr:0,a,b,p:[],fx:[],time:60,over:0,fl:0,hits:0,sk:0,ar:m.ar,pc:{},me,nm:[m.n[me],m.n[1-me]]};ik=-1;
+ show(null);applyT();$('#pw').style.display='none';if(touch)$('#tc').style.display='block';$('#q').style.display='block';beep(440,.3)}
+function ap(o,d){if(o.tx===undefined)o.x=d[0];o.tx=d[0];o.y=d[1];o.f=d[2];o.st=d[3];o.hp=d[4];o.en=d[5];o.pw=d[6]?5:0;o.cb=d[8]}
+function osnap(m){if(!G||!G.on||G.over)return;ap(G.a,m.f[G.me]);ap(G.b,m.f[1-G.me]);G.time=m.tm;
+ G.p=m.p.map(q=>{const ch=(q[3]===G.me?G.a:G.b).ch;return{x:q[0],y:q[1],r:q[2],c:q[4]?ch.h:ch.c}});
+ m.ev.forEach(e=>{G.fx.push({x:e[0],y:e[1],t:.25,c:'#fff'});G.sk=.15;beep(130+Math.random()*60,.08,'square',.1)})}
+function oend(m){if(!G||!G.on)return;G.over=1;$('#rb1').style.display=$('#rb2').style.display='none';setTimeout(()=>{if(!G)return;$('#rt').textContent=m.w<0?'DRAW':m.w?'VICTORY!':'DEFEAT';$('#rd').textContent=m.why==='left'?'Your opponent left the match.':'Online match finished (casual match: no coins or kills yet).';show('res')},1200)}
+function sendIn(){const k=(K.left?1:0)|(K.right?2:0)|(K.up?4:0)|(K.punch?8:0)|(K.kick?16:0)|(K.sp?32:0)|(K.ult?64:0)|(K.dodge?128:0)|(K.block?256:0);if(k!==ik||--it<=0){ik=k;it=6;sendW({t:'in',k})}}
+async function logout(){await sb.auth.signOut();UID=null;show('au')}
+if(CLOUD){show('au');const sc=document.createElement('script');sc.src='https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js';sc.onerror=()=>{$('#aum').textContent='Cannot reach the cloud. Check your connection.'};sc.onload=async()=>{sb=supabase.createClient(SB_URL,SB_KEY);const{data}=await sb.auth.getSession();if(data.session){UID=data.session.user.id;await boot()}};document.head.append(sc);setInterval(()=>{if($('#lb').classList.contains('on'))rlb()},10000)}
+</script></body></html>
